@@ -13,38 +13,43 @@
 #include <SFML/Graphics/Drawable.hpp>
 #include <SFML/Graphics/Sprite.hpp>
 #include <SFML/Window/Event.hpp>
+#include <SFML/Graphics/RenderWindow.hpp>
+#include "Entity.hpp"
 
-enum Direction {
-  LEFT,
-  RIGHT,
-  TOP,
-  BOTTOM
+enum class Direction : int {
+  LEFT = 270,
+  RIGHT = 90,
+  TOP = 0,
+  BOTTOM = 180,
 };
 
 class SnakePart {
- private:
+ public:
   sf::Sprite sprite;
   Direction direction;
   sf::Vector2f position;
-  float rotate;
+  SnakePart* previous = nullptr;
+  SnakePart* next = nullptr;
  public:
-  SnakePart* previous;
-  SnakePart* next;
- public:
-  void move();
+  SnakePart(sf::Vector2f);
   bool isDead();
   void updateSprite();
   void update();
-  void handleKeyEvent(sf::Keyboard::Key);
 };
 
-class Snake : public sf::Drawable {
+class Snake : public Entity {
  private:
-  float speed;
-  Direction direction;
+  float speed = 2;
+  Direction direction = Direction::TOP;
+  SnakePart* snake;
+  SnakePart* tail;
  public:
-  void update
-  void draw(sf::RenderTarget& target, sf::RenderStates states);
+  Snake();
+  void move(sf::Vector2f);
+  void update(sf::Time elapsed);
+  void handleEvent(sf::Event);
+  void draw(sf::RenderWindow *window) override;
+  void addPart();
 };
 
 #endif //SFML_SNAKE_SRC_SNAKE_HPP_

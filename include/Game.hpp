@@ -12,6 +12,7 @@
 #include <memory>
 #include <vector>
 #include <SFML/Graphics.hpp>
+#include "Entity.hpp"
 
 class Game;
 
@@ -23,6 +24,8 @@ class Game {
   EventHandler eventHandlerMain;
   std::vector<std::shared_ptr<sf::Drawable>> drawables;
  public:
+  std::unordered_map<std::string, std::shared_ptr<Entity>> responsiveEntities;
+  void addEntity(std::pair<std::string, std::shared_ptr<Entity>>);
   void add(std::shared_ptr<sf::Drawable>);
   void setMainEventHandler(EventHandler);
   void start();

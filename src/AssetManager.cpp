@@ -3,12 +3,13 @@
 //
 
 #include "AssetManager.hpp"
-void AssetManager::loadTexture(std::string resourceName, std::string resourcePath) {
+#include "Snake.hpp"
+void AssetManager::loadTexture(const std::string& resourceName, const std::string& resourcePath) {
   sf::Texture* texture = new sf::Texture();
   texture->loadFromFile(resourcePath);
   assets.textures.insert({resourceName, texture});
 }
-sf::Texture *AssetManager::getTexture(std::string resourceName) {
+sf::Texture *AssetManager::getTexture(const std::string& resourceName) {
   return assets.textures.at(resourceName);
 }
 AssetManager::~AssetManager() {
@@ -22,7 +23,7 @@ AssetManager *AssetManager::GetInstance() {
   return singleton;
 }
 
-sf::Sprite createSprite(std::string resourceName) {
+sf::Sprite createSprite(const std::string& resourceName) {
   sf::Texture* texture = AssetManager::GetInstance()->getTexture(resourceName);
   texture->setRepeated(true);
   sf::Sprite sprite;
@@ -30,6 +31,11 @@ sf::Sprite createSprite(std::string resourceName) {
   return sprite;
 }
 void loadStandardAssets() {
-  AssetManager::GetInstance()->loadTexture("background", "assets/Grass/Grass11.png");
+  auto manager = AssetManager::GetInstance();
+  manager->loadTexture("background", "assets/Grass/Grass11.png");
+  manager->loadTexture(TAIL_RESOURCE, "assets/tail_down.png");
+  manager->loadTexture(HEAD_RESOURCE, "assets/head_up.png");
+  manager->loadTexture(ANGLE_BODY_RESOURCE, "assets/body_topleft.png");
+  manager->loadTexture(BODY_STRAIGHT_RESOURCE, "assets/body_vertical.png");
 }
 AssetManager* AssetManager::singleton = nullptr;

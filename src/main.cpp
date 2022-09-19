@@ -1,8 +1,11 @@
 #include <iostream>
 #include "Game.hpp"
 #include "AssetManager.hpp"
-void eventHandler(sf::Event event, Game* game) {
+#include "Snake.hpp"
 
+void eventHandler(sf::Event event, Game* game) {
+  for (auto& entity: game->responsiveEntities)
+    entity.second->handleEvent(event);
 }
 
 int main() {
@@ -13,9 +16,11 @@ int main() {
   loadStandardAssets();
   auto backgroundPtr = std::make_shared<sf::Sprite>(createSprite("background"));
   backgroundPtr->setScale(30.f, 30.f);
+  auto snake = std::make_shared<Snake>();
   Game game;
-  game.add(backgroundPtr);
-  game.add(circlePtr);
+//  game.add({"background", backgroundPtr});
+  game.add(circlePtr );
+  game.addEntity({ "player", snake});
   game.setMainEventHandler(eventHandler);
   game.start();
   return 0;

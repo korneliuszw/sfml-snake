@@ -19,8 +19,8 @@ class AssetManager {
   Assets assets;
   static AssetManager* singleton;
  public:
-  void loadTexture(std::string resourceName, std::string resourcePath);
-  sf::Texture* getTexture(std::string resoureName);
+  void loadTexture(const std::string& resourceName, const std::string& resourcePath);
+  sf::Texture* getTexture(const std::string& resoureName);
   ~AssetManager();
  public:
   static AssetManager* GetInstance();
@@ -28,6 +28,6 @@ class AssetManager {
 
 void loadStandardAssets();
 
-sf::Sprite createSprite(std::string resourceName);
+sf::Sprite createSprite(const std::string& resourceName);
 
 #endif //SFML_SNAKE_SRC_ASSETMANAGER_HPP_
