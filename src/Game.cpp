@@ -11,6 +11,7 @@ void Game::add(std::shared_ptr<sf::Drawable> drawable) {
 }
 void Game::start() {
   this->window.setVerticalSyncEnabled(true);
+//  this->window.setFramerateLimit(60);
   sf::Clock clock;
   while (this->window.isOpen()) {
     sf::Event event;
@@ -20,12 +21,12 @@ void Game::start() {
       this->eventHandlerMain(event, this);
     }
     this->window.clear(sf::Color::White);
+    for (auto& drawable: this->drawables) {
+      this->window.draw(*(drawable.get()));
+    }
     for (auto& entity: this->responsiveEntities) {
       entity.second->update(clock.getElapsedTime());
       entity.second->draw(&this->window);
-    }
-    for (auto& drawable: this->drawables) {
-      this->window.draw(*(drawable.get()));
     }
     this->window.display();
     clock.restart();

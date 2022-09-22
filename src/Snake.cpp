@@ -6,76 +6,31 @@
 #include <AssetManager.hpp>
 #include <SFML/Graphics.hpp>
 #include <math.h>
-#define SNAKE_START_X 20
-#define SNAKE_START_Y 10
+#define SNAKE_START_X 200
+#define SNAKE_START_Y 200
 #define SNAKE_ASSETS_WIDTH 32
 #define SNAKE_ASSETS_HEIGHT 32
 
 bool directionIsVertical(Direction direction) {
   return ((int) direction) % 180 == 0;
 }
-void SnakePart::updateSprite() {
-  if (this->previous == nullptr)
-    this->sprite = createSprite(HEAD_RESOURCE);
-  else if (this->next == nullptr) {
-    this->sprite = createSprite(TAIL_RESOURCE);
-  } else if (this->next && this->previous) {
-    if (this->next->position.x != this->previous->position.x && this->next->position.y != this->previous->position.y)
-      this->sprite = createSprite(ANGLE_BODY_RESOURCE);
-  } else
-    this->sprite = createSprite(BODY_STRAIGHT_RESOURCE);
-  auto spritePos = this->position;
-  spritePos.y = round(this->position.y);
-  spritePos.x = round(this->position.x);
-  spritePos *= 3.f;
-  this->sprite.rotate((float) this->direction);
-  this->sprite.setPosition(spritePos);
-}
-SnakePart::SnakePart(sf::Vector2f position) {
-  this->position = position;
-  this->direction = Direction::TOP;
-}
 void Snake::update(sf::Time elapsed) {
-  float move = this->speed * elapsed.asSeconds();
-  sf::Vector2f newPos = this->snake->position;
-  switch (this->direction) {
-    case Direction::TOP: {
-      newPos.y -= move;
-      break;
-    }
-    case Direction::BOTTOM: {
-      newPos.y += move;
-      break;
-    }
-    case Direction::LEFT: {
-      newPos.x -= move;
-      break;
-    }
-    case Direction::RIGHT: {
-      newPos.x += move;
-      break;
-    }
+  if (wasInput) {
+    this->addPart();
+    this->parts.pop_back();
   }
-  this->move(newPos);
-}
-void Snake::move(sf::Vector2f newPos) {
-  SnakePart* head = this->tail;
-  while (head->previous) {
-    head->position = head->previous->position;
-    head->direction = head->previous->direction;
-    head = head->previous;
-  }
-  this->snake->position = newPos;
-  this->snake->position.y -= 1;
-  this->snake->direction = this->direction;
+  this->wasInput = false;
 }
 Snake::Snake() {
-  this->snake = this->tail = new SnakePart({SNAKE_START_X, SNAKE_START_Y});
+  this->addPart();
+  this->addPart();
   this->addPart();
 }
 void Snake::handleEvent(sf::Event event) {
+  // Figure out KeyPressed vs other key event, may cause issue with wasInput
   if (event.type != sf::Event::EventType::KeyPressed)
     return;
+  this->wasInput = true;
   auto keyEvent = event.key;
   switch (keyEvent.code) {
     case sf::Keyboard::W: {
@@ -95,18 +50,34 @@ void Snake::handleEvent(sf::Event event) {
       break;
     }
   }
-
 }
 void Snake::draw(sf::RenderWindow *window) {
-  auto head = this->snake;
-  while (head != nullptr) {
-    head->updateSprite();
+  for (auto head = this->parts.begin(); head != this->parts.end(); head++) {
+    auto next = ++head;
+    auto previous = --head;
+    if (head == this->parts.begin())
+      head->sprite = createSprite(HEAD_RESOURCE);
+    else if (head == --this->parts.end())
+      head->sprite = createSprite(TAIL_RESOURCE);
+    else if (next->position.x != head->position.x && next->position.y != head->position.y)
+        head->sprite = createSprite(ANGLE_BODY_RESOURCE);
+    else
+      head->sprite = createSprite(BODY_STRAIGHT_RESOURCE);
+
+    head->sprite.rotate((float) this->direction);
+    head->sprite.setPosition(head->position);
     window->draw(head->sprite);
-    head = head->next;
   }
 }
 void Snake::addPart() {
-  this->tail->next = new SnakePart({0, 0});
-  this->tail->next->previous = this->tail;
-  this->tail = this->tail->next;
+  auto newPart = SnakePart({SNAKE_START_X, SNAKE_START_Y});
+  if (!this->parts.empty()) newPart.position = this->parts.front().position;
+  calculateNewPosition(this->direction, newPart.position, SNAKE_ASSETS_WIDTH);
+  this->parts.push_front(newPart);
+}
+bool Snake::isTouching(const sf::Vector2f& pos) {
+  for (auto it = this->parts.begin(); it != this->parts.end(); it++)
+    if (it->position == pos)
+      return true;
+  return false
 }

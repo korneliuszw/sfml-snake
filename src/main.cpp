@@ -18,7 +18,7 @@ int main() {
   backgroundPtr->setScale(30.f, 30.f);
   auto snake = std::make_shared<Snake>();
   Game game;
-//  game.add({"background", backgroundPtr});
+  game.add(backgroundPtr);
   game.add(circlePtr );
   game.addEntity({ "player", snake});
   game.setMainEventHandler(eventHandler);
