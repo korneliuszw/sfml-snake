@@ -16,10 +16,11 @@
 #include <SFML/Graphics/RenderWindow.hpp>
 #include "Entity.hpp"
 #include "SnakePart.hpp"
+#include "Game.hpp"
 
 class Snake : public Entity {
  private:
-  float speed = 1;
+  float speed = 2;
   Direction direction = Direction::TOP;
   sf::Vector2i previousPosition;
   std::list<SnakePart> parts;
@@ -27,10 +28,10 @@ class Snake : public Entity {
   void addPart();
   void checkGameState();
   bool isDead();
-  int touchingApples();
+  void handleAppleTouch();
  public:
   Snake();
-  void update(sf::Time elapsed);
+  void update(sf::Time elapsed, void*);
   void updateDirection(Direction);
   void handleEvent(sf::Event);
   void draw(sf::RenderWindow *window) override;

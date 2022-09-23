@@ -25,7 +25,7 @@ void Game::start() {
       this->window.draw(*(drawable.get()));
     }
     for (auto& entity: this->responsiveEntities) {
-      entity.second->update(clock.getElapsedTime());
+      entity.second->update(clock.getElapsedTime(), this);
       entity.second->draw(&this->window);
     }
     this->window.display();

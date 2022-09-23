@@ -38,6 +38,15 @@
   <component name="DBNavigator.Project.DatabaseSessionManager">
     <connection id="cb247792-8f17-40a6-9732-9a9d829dc3be" />
   </component>
+  <component name="DBNavigator.Project.DatasetFilterManager">
+    <filter-actions connection-id="cb247792-8f17-40a6-9732-9a9d829dc3be" dataset="database.hotel" active-filter-id="">
+      <filter id="7b0b0e4f-8b31-4bf7-897a-afe8aa2f094b" name="Filter 1" temporary="false" custom-name="false" type="basic" join-type="AND">
+        <condition column="id_hotelu" operator="=" value="" active="true" />
+      </filter>
+    </filter-actions>
+    <filter-actions connection-id="cb247792-8f17-40a6-9732-9a9d829dc3be" dataset="database.motyw_pokoju" active-filter-id="" />
+    <filter-actions connection-id="cb247792-8f17-40a6-9732-9a9d829dc3be" dataset="database.rezerwacja" active-filter-id="" />
+  </component>
   <component name="DBNavigator.Project.EditorStateManager">
     <last-used-providers />
   </component>

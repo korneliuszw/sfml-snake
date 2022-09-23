@@ -4,6 +4,8 @@
 
 #include "AssetManager.hpp"
 #include "Snake.hpp"
+#include "AppleManager.hpp"
+
 void AssetManager::loadTexture(const std::string& resourceName, const std::string& resourcePath) {
   sf::Texture* texture = new sf::Texture();
   texture->loadFromFile(resourcePath);
@@ -37,5 +39,6 @@ void loadStandardAssets() {
   manager->loadTexture(HEAD_RESOURCE, "assets/head_up.png");
   manager->loadTexture(ANGLE_BODY_RESOURCE, "assets/body_topleft.png");
   manager->loadTexture(BODY_STRAIGHT_RESOURCE, "assets/body_vertical.png");
+  manager->loadTexture(APPLE_RESOURCE, "assets/apple.png");
 }
 AssetManager* AssetManager::singleton = nullptr;
