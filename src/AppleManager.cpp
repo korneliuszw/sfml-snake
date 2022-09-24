@@ -8,12 +8,13 @@
 #include "Snake.hpp"
 
 void AppleManager::Apple::draw(sf::RenderTarget &target, sf::RenderStates states) const {
-  auto sprite = createSprite(APPLE_RESOURCE);
-  sprite.setPosition(tileToReal(position));
   target.draw(sprite);
 }
 AppleManager::Apple::Apple(sf::Vector2f pos) {
-  this->position = pos;
+  this->sprite = createSprite(APPLE_RESOURCE);
+  this->sprite.setPosition(tileToReal(pos));
+  this->sprite.setScale(TILE_WIDTH / 40.f, TILE_HEIGHT / 40.f);
+  this->sprite.setOrigin(this->sprite.getLocalBounds().width / 2, this->sprite.getLocalBounds().height / 2);
 }
 std::shared_ptr<AppleManager> AppleManager::singleton = nullptr;
 std::shared_ptr<AppleManager> AppleManager::GetInstance() {
@@ -26,7 +27,7 @@ void AppleManager::draw(sf::RenderWindow *window) {
     window->draw(*it);
 }
 void AppleManager::update(sf::Time elapsed, void* context) {
-  if (internalTimer.getElapsedTime().asSeconds() < GENERATE_EVERY_SECONDS)
+  if (internalTimer.getElapsedTime().asSeconds() < GENERATE_EVERY_SECONDS || ((Game*) context)->died())
     return;
   internalTimer.restart();
   sf::Vector2f newPosition = {static_cast<float>(random_x(rng)), static_cast<float>(random_y(rng))};
@@ -49,12 +50,15 @@ AppleManager::AppleManager() {
   std::random_device rd;
   this->rng = std::mt19937(rd());
 }
-std::optional<std::list<AppleManager::Apple>::iterator> AppleManager::isTouching(const sf::Vector2f &position) {
+std::optional<std::list<AppleManager::Apple>::iterator> AppleManager::isTouching(const sf::Vector2f& rect) {
   for (auto it = this->apples.begin(); it != this->apples.end(); it++)
-    if (it->position == position)
+    if (it->sprite.getGlobalBounds().contains(tileToReal(rect)))
       return it;
   return {};
 }
 void AppleManager::removeAt(std::list<AppleManager::Apple>::iterator iterator) {
   this->apples.erase(iterator);
+}
+void AppleManager::reset() {
+  this->apples.clear();
 }

@@ -8,6 +8,7 @@
 #include <SFML/Graphics/Drawable.hpp>
 #include <SFML/System/Time.hpp>
 #include <SFML/Window/Event.hpp>
+#include <SFML/Graphics/RenderWindow.hpp>
 class Entity {
  public:
   virtual void draw(sf::RenderWindow*) = 0;

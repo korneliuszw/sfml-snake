@@ -28,11 +28,11 @@ class Snake : public Entity {
   void addPart();
   void checkGameState();
   bool isDead();
-  void handleAppleTouch();
+  bool handleAppleTouch();
  public:
   Snake();
   void update(sf::Time elapsed, void*);
-  void updateDirection(Direction);
+  void updateSprites();
   void handleEvent(sf::Event);
   void draw(sf::RenderWindow *window) override;
   bool isTouching(const sf::Vector2f&);

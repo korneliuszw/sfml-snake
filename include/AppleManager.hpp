@@ -13,13 +13,13 @@
 #include <optional>
 #include "Entity.hpp"
 #include "Game.hpp"
-constexpr int GENERATE_EVERY_SECONDS = 15;
+constexpr int GENERATE_EVERY_SECONDS = 5;
 
 class AppleManager: public Entity {
  private:
   class Apple: public sf::Drawable {
    public:
-    sf::Vector2f position;
+    sf::Sprite sprite;
     Apple(sf::Vector2f);
     void draw(sf::RenderTarget &target, sf::RenderStates states) const override;
   };
@@ -27,8 +27,8 @@ class AppleManager: public Entity {
   std::list<Apple> apples;
   sf::Clock internalTimer;
   std::mt19937 rng;
-  std::uniform_int_distribution<int> random_x = std::uniform_int_distribution(1, TILES_WIDTH);
-  std::uniform_int_distribution<int> random_y = std::uniform_int_distribution(1, TILES_HEIGHT);
+  std::uniform_int_distribution<int> random_x = std::uniform_int_distribution(2, TILES_WIDTH - 1);
+  std::uniform_int_distribution<int> random_y = std::uniform_int_distribution(2, TILES_HEIGHT - 1);
  public:
   AppleManager();
   void update(sf::Time elapsed, void*) override;
@@ -36,6 +36,7 @@ class AppleManager: public Entity {
   void draw(sf::RenderWindow *window) override;
   std::optional<std::list<Apple>::iterator> isTouching(const sf::Vector2f&);
   void removeAt(std::list<Apple>::iterator);
+  void reset();
   static std::shared_ptr<AppleManager> GetInstance();
 };
 
